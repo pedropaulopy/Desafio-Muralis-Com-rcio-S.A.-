@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "DesafioMuralisApplication",
+            "request": "launch",
+            "mainClass": "DesafioMuralisApplication",
+            "projectName": "DesafioMuralis"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-DesafioMuralisApplication<DesafioMuralis>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.DesafioMuralis.DesafioMuralisApplication",
+            "projectName": "DesafioMuralis",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
