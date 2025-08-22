@@ -1,38 +1,98 @@
+/* ===== Estilo base ===== */
+body {
+  margin: 0;
+  font-family: 'Archivo', sans-serif;
+  background-color: #121212;  /* fundo escuro moderno */
+  color: #FFFFFF;             /* fonte branca */
+}
+
+/* ===== App layout ===== */
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  text-align: justify;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #121212;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #FFFFFF;
 }
 
-.App-link {
+/* ===== Links ===== */
+a:link {
+  color: #FC9F5B;         /* link não visitado */
+  text-decoration: none;
+}
+
+a:visited {
+  color: #086788;         /* link visitado */
+}
+
+a:hover {
+  color: #21a1f1;         /* hover */
+  text-decoration: underline;
+}
+
+a:active {
+  color: #ffffff;         /* clique ativo */
+}
+
+/* ===== Estilização do formulário ===== */
+.form-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  background-color: #1e1e1e;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+form div {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+input[type="text"],
+input[type="date"] {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background-color: #2a2a2a;
+  color: #ffffff;
+}
+
+button[type="submit"] {
+  padding: 0.7rem 1.5rem;
+  background-color: #61dafb;
+  border: none;
+  color: #000;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #21a1f1;
+}
+
+/* ===== Mensagem de resposta ===== */
+p {
+  margin-top: 1rem;
   color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  font-weight: bold;
 }
