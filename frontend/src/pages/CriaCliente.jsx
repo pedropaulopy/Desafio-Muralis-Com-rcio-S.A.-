@@ -1,17 +1,27 @@
 import React, { useState } from "react";
-import InputMask from 'react-input-mask';
 
 function CriarCliente() {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [data_nascimento, setDataNascimento] = useState("");
-  const [endereco, setEndereco] = useState("");
+  const [endereco, setEndereco] = useState(""); // desabilitado
+  const [cep, setCep] = useState("");
+  const [numero, setNumero] = useState("");
+  const [complemento, setComplemento] = useState("");
   const [mensagem, setMensagem] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const cliente = { nome, cpf: cpf.replace(/\D/g, ''), data_nascimento, endereco };
+    // monta endereço final sem o CEP
+    const enderecoCompleto = `${endereco}, ${numero}${complemento ? `, ${complemento}` : ""}`;
+
+    const cliente = {
+      nome,
+      cpf: cpf.replace(/\D/g, ""), // remove máscara
+      data_nascimento,
+      endereco: enderecoCompleto
+    };
 
     try {
       const response = await fetch("http://localhost:8080/clientes/criar_cliente", {
@@ -26,6 +36,9 @@ function CriarCliente() {
         setCpf("");
         setDataNascimento("");
         setEndereco("");
+        setCep("");
+        setNumero("");
+        setComplemento("");
       } else {
         setMensagem("Erro ao criar cliente.");
       }
@@ -74,12 +87,38 @@ function CriarCliente() {
           />
         </div>
         <div>
+          <label>CEP:</label>
+          <input
+            type="text"
+            value={cep}
+            onChange={(e) => setCep(e.target.value)}
+            required
+          />
+        </div>
+        <div>
           <label>Endereço:</label>
           <input
             type="text"
             value={endereco}
             onChange={(e) => setEndereco(e.target.value)}
+            disabled // campo desabilitado
+          />
+        </div>
+        <div>
+          <label>Número:</label>
+          <input
+            type="text"
+            value={numero}
+            onChange={(e) => setNumero(e.target.value)}
             required
+          />
+        </div>
+        <div>
+          <label>Complemento:</label>
+          <input
+            type="text"
+            value={complemento}
+            onChange={(e) => setComplemento(e.target.value)}
           />
         </div>
         <button type="submit">Criar Cliente</button>
