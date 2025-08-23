@@ -47,6 +47,11 @@ function AtualizaCliente() {
           setCpf(data.cpf || "");
           setDataNascimento(data.data_nascimento || "");
           setEndereco(data.endereco || "");
+          const partesEndereco = data.endereco.split(",");
+          if (partesEndereco.length >= 3) {
+            setNumero(partesEndereco[3]?.trim() || "");
+            setComplemento(partesEndereco[4]?.trim() || "");
+          }
         } else {
           setMensagem("Erro ao carregar cliente.");
         }
@@ -62,11 +67,13 @@ function AtualizaCliente() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const enderecoCompleto = `${endereco}, ${numero}${complemento ? `, ${complemento}` : ""}`;
+
     const clienteAtualizado = {
       nome,
-      cpf,
+      cpf: cpf.replace(/\D/g, ""),
       data_nascimento,
-      endereco,
+      endereco: enderecoCompleto,
     };
 
     try {
