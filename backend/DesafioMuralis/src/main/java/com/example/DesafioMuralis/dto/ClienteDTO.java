@@ -1,5 +1,9 @@
 package com.example.DesafioMuralis.dto;
+
 import com.example.DesafioMuralis.model.Cliente;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 
 public class ClienteDTO {
     private Long id;
@@ -21,6 +25,26 @@ public class ClienteDTO {
                 : null;
         this.endereco = cliente.getEndereco();
         this.cep = cliente.getCep();
+    }
+
+    public Cliente toEntity() {
+        Cliente cliente = new Cliente();
+        cliente.setId(this.id);
+        cliente.setNome(this.nome);
+        cliente.setCpf(this.cpf);
+        cliente.setEndereco(this.endereco);
+        cliente.setCep(this.cep);
+
+        if (this.data_nascimento != null && !this.data_nascimento.isBlank()) {
+            try {
+                cliente.setData_nascimento(LocalDate.parse(this.data_nascimento));
+            } catch (DateTimeParseException e) {
+                // logar ou tratar a exceção de data inválida
+                cliente.setData_nascimento(null);
+            }
+        }
+
+        return cliente;
     }
 
     // Getters e Setters
