@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import com.example.DesafioMuralis.model.Contato;
 import com.example.DesafioMuralis.repository.ClienteRepository;
 import com.example.DesafioMuralis.repository.ContatoRepository;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/contatos")
 public class ContatoController {
@@ -28,6 +30,7 @@ public class ContatoController {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/listar_contatos/{clienteId}")
     public List<Contato> listarPorCliente(@PathVariable Long clienteId) {
         @SuppressWarnings("unused")
@@ -35,6 +38,7 @@ public class ContatoController {
         return contatoRepository.findByClienteId(clienteId);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/criar_contato/{clienteId}")
     public ResponseEntity<Contato> criarContato(@PathVariable Long clienteId, @RequestBody Contato contato) {
         Cliente cliente = clienteRepository.findById(clienteId)
@@ -43,8 +47,9 @@ public class ContatoController {
         contato.setCliente(cliente);
         Contato salvo = contatoRepository.save(contato);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
-    }
+}
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/atualizar_contatos/{clienteId}/{id}")
     public ResponseEntity<Contato> atualizarContato(
         @PathVariable Long clienteId,
@@ -70,11 +75,11 @@ public class ContatoController {
             return ResponseEntity.ok(salvo);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/deletar_contato/{clienteId}/{id}")
     public ResponseEntity<Contato> deletarContato(
         @PathVariable Long clienteId,
-        @PathVariable Long id,
-        @RequestBody Contato contatoAtualizado) {
+        @PathVariable Long id) {
 
             Cliente cliente = clienteRepository.findById(clienteId)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));

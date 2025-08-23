@@ -3,6 +3,12 @@ import java.time.LocalDate;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +28,9 @@ public class Cliente {
     @NotBlank(message="O CPF não pode estar vazio.")@CPF(message="CPF inválido.") @Column(name="CPF", length=14, nullable=false, unique=true)
     private String cpf;
 
-    @Past(message="A data de nascimento deve estar no passado.") @Column(name="Data de Nascimento", length=14, nullable=true, unique=false)
+    @Past(message="A data de nascimento deve estar no passado.") @Column(name="Data de Nascimento", length=14, nullable=true, unique=false) @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") @JsonDeserialize(using = LocalDateDeserializer.class)
+@JsonSerialize(using = LocalDateSerializer.class)
+
     private LocalDate data_nascimento;
 
     @Column(name="Endereço", nullable=true)
