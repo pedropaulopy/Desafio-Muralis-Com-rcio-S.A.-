@@ -8,9 +8,13 @@ function AtualizaCliente() {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [data_nascimento, setDataNascimento] = useState("");
+  const [cep, setCep] = useState(""); // <- Adicionado
   const [endereco, setEndereco] = useState("");
+  const [numero, setNumero] = useState(""); // <- Adicionado
+  const [complemento, setComplemento] = useState(""); // <- Adicionado
   const [mensagem, setMensagem] = useState("");
 
+  // Buscar endereço pelo CEP
   useEffect(() => {
     const buscarEndereco = async () => {
       if (cep.length === 8) {
@@ -37,6 +41,7 @@ function AtualizaCliente() {
     buscarEndereco();
   }, [cep]);
 
+  // Carregar cliente
   useEffect(() => {
     async function fetchCliente() {
       try {
@@ -47,10 +52,12 @@ function AtualizaCliente() {
           setCpf(data.cpf || "");
           setDataNascimento(data.data_nascimento || "");
           setEndereco(data.endereco || "");
-          const partesEndereco = data.endereco.split(",");
-          if (partesEndereco.length >= 3) {
-            setNumero(partesEndereco[3]?.trim() || "");
-            setComplemento(partesEndereco[4]?.trim() || "");
+
+          // Separar endereço em partes
+          const partes = data.endereco.split(",");
+          if (partes.length >= 3) {
+            setNumero(partes[3]?.trim() || "");
+            setComplemento(partes[4]?.trim() || "");
           }
         } else {
           setMensagem("Erro ao carregar cliente.");
@@ -64,6 +71,7 @@ function AtualizaCliente() {
     fetchCliente();
   }, [id]);
 
+  // Submeter atualização
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -130,6 +138,16 @@ function AtualizaCliente() {
             type="date"
             value={data_nascimento}
             onChange={(e) => setDataNascimento(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>CEP:</label>
+          <input
+            type="text"
+            value={cep}
+            onChange={(e) => setCep(e.target.value.replace(/\D/g, ""))}
+            maxLength={8}
+            required
           />
         </div>
         <div>
