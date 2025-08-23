@@ -86,6 +86,7 @@ function AtualizaCliente() {
       cpf: cpf.replace(/\D/g, ""),
       data_nascimento,
       endereco: enderecoCompleto,
+      cep,
     };
 
     try {
