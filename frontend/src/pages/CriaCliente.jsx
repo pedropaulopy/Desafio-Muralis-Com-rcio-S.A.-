@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import InputMask from 'react-input-mask';
 
 function CriarCliente() {
   const [nome, setNome] = useState("");
@@ -10,7 +11,7 @@ function CriarCliente() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const cliente = { nome, cpf, data_nascimento, endereco };
+    const cliente = { nome, cpf: cpf.replace(/\D/g, ''), data_nascimento, endereco };
 
     try {
       const response = await fetch("http://localhost:8080/clientes/criar_cliente", {
@@ -39,7 +40,7 @@ function CriarCliente() {
       <h2>Novo Cliente</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Nome* :</label>
+          <label>Nome:</label>
           <input
             type="text"
             value={nome}
@@ -48,13 +49,14 @@ function CriarCliente() {
           />
         </div>
         <div>
-          <label>CPF* (com pontos):</label>
-          <input
-            type="text"
+          <label>CPF:</label>
+          <InputMask
+            mask="999.999.999-99"
             value={cpf}
             onChange={(e) => setCpf(e.target.value)}
-            required
-          />
+          >
+            {(inputProps) => <input type="text" {...inputProps} required />}
+          </InputMask>
         </div>
         <div>
           <label>Data de Nascimento (YYYY-MM-DD):</label>
