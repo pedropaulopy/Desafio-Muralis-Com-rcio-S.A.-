@@ -50,13 +50,19 @@ function CriarCliente() {
         </div>
         <div>
           <label>CPF:</label>
-          <InputMask
-            mask="999.999.999-99"
+          <input
+            type="text"
             value={cpf}
-            onChange={(e) => setCpf(e.target.value)}
-          >
-            {(inputProps) => <input type="text" {...inputProps} required />}
-          </InputMask>
+            onChange={(e) => {
+              let v = e.target.value.replace(/\D/g, "");
+              v = v.replace(/(\d{3})(\d)/, "$1.$2");
+              v = v.replace(/(\d{3})(\d)/, "$1.$2");
+              v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+              setCpf(v);
+            }}
+            maxLength={14}
+            required
+          />
         </div>
         <div>
           <label>Data de Nascimento (YYYY-MM-DD):</label>
