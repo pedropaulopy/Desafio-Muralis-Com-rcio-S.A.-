@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import "./App.css";
+import "./App.css"
 import ListaClientes from "./pages/ListaClientes";
 import CriarCliente from "./pages/CriaCliente";
 import AtualizaCliente from "./pages/AtualizaCliente";

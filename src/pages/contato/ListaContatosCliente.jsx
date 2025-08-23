@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-
 import axios from "axios";
 
 const ListaContatosCliente = () => {
@@ -49,41 +48,31 @@ const ListaContatosCliente = () => {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2 style={{ margin: 0 }}>Contatos do Cliente #{clienteId}</h2>
+        <h2>Contatos do Cliente #{clienteId}</h2>
         <button onClick={handleCriar}>Criar Contato</button>
-    </div>
+      </div>
 
       {erro && <p style={{ color: "red" }}>{erro}</p>}
+
       {contatos.length === 0 ? (
-        <>
-          <p>Nenhum contato encontrado para este cliente.</p>
-        </>
+        <p>Nenhum contato encontrado para este cliente.</p>
       ) : (
-        <table border="1" cellPadding="8">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Tipo</th>
-              <th>Valor</th>
-              <th>Observação</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {contatos.map((contato) => (
-              <tr key={contato.id}>
-                <td>{contato.id}</td>
-                <td>{contato.tipo}</td>
-                <td>{contato.valor}</td>
-                <td>{contato.observacao || "-"}</td>
-                <td>
-                  <button onClick={() => handleEditar(contato.id)}>Editar</button>{" "}
-                  <button onClick={() => handleDeletar(contato.id)}>Deletar</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ul className="lista-clientes">
+          {contatos.map((contato) => (
+            <li key={contato.id} className="cliente-item">
+              <div className="cliente-conteudo">
+                <span>
+                  <strong>{contato.tipo}</strong>: {contato.valor}
+                  {contato.observacao && <> — <em>{contato.observacao}</em></>}
+                </span>
+                <div className="cliente-botoes">
+                  <button onClick={() => handleEditar(contato.id)}>EDITAR</button>
+                  <button onClick={() => handleDeletar(contato.id)}>DELETAR</button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

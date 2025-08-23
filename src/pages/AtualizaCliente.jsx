@@ -63,16 +63,26 @@ function AtualizaCliente() {
   };
 
   return (
-    <div>
+    <div className="form-container">
       <h2>Atualizar Cliente</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Nome:</label>
-          <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} required />
+          <input
+            type="text"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            required
+          />
         </div>
         <div>
           <label>CPF:</label>
-          <input type="text" value={cpf} onChange={(e) => setCpf(e.target.value)} required />
+          <input
+            type="text"
+            value={cpf}
+            onChange={(e) => setCpf(e.target.value)}
+            required
+          />
         </div>
         <div>
           <label>Data de Nascimento:</label>
@@ -84,7 +94,11 @@ function AtualizaCliente() {
         </div>
         <div>
           <label>Endereço:</label>
-          <input type="text" value={endereco} onChange={(e) => setEndereco(e.target.value)} />
+          <input
+            type="text"
+            value={endereco}
+            onChange={(e) => setEndereco(e.target.value)}
+          />
         </div>
         <button type="submit">Salvar</button>
       </form>

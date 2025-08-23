@@ -53,16 +53,24 @@ function ListaClientes() {
       {clientes.length === 0 ? (
         <p>Nenhum cliente cadastrado.</p>
       ) : (
-        <ul>
-          {clientes.map((cliente) => (
-            <li key={cliente.id}>
-              <strong>{cliente.nome}</strong> — CPF: {cliente.cpf} —{" "}
-              <button onClick={() => handleEditar(cliente.id)}>Editar</button>
-              <button onClick={() => handleDeletar(cliente.id)}>Deletar</button>
-              <button onClick={() => handleListarContatos(cliente.id)}>Listar Contatos</button>
-            </li>
-          ))}
-        </ul>
+    <ul className="lista-clientes">
+      {clientes.map((cliente) => (
+        <li key={cliente.id} className="cliente-item">
+          <div className="cliente-conteudo">
+            <span>
+              <strong>{cliente.nome}</strong> — CPF: {cliente.cpf}
+            </span>
+            <div className="cliente-botoes">
+              <button onClick={() => handleEditar(cliente.id)}>EDITAR</button>
+              <button onClick={() => handleDeletar(cliente.id)}>DELETAR</button>
+              <button onClick={() => handleListarContatos(cliente.id)}>LISTAR CONTATOS</button>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+
       )}
     </div>
   );

@@ -31,7 +31,7 @@ a:link {
 }
 
 a:visited {
-  color: #086788;         /* link visitado */
+  color: #FC9F5B;         /* link visitado */
 }
 
 a:hover {
@@ -75,9 +75,11 @@ input[type="date"] {
   color: #ffffff;
 }
 
+/* ===== Botões ===== */
+button,
 button[type="submit"] {
-  padding: 0.7rem 1.5rem;
-  background-color: #61dafb;
+  padding: 0.3rem 1rem;
+  background-color: #FC9F5B;
   border: none;
   color: #000;
   font-weight: bold;
@@ -86,8 +88,15 @@ button[type="submit"] {
   transition: background-color 0.3s ease;
 }
 
+button:hover,
 button[type="submit"]:hover {
   background-color: #21a1f1;
+}
+
+button:disabled {
+  background-color: #444;
+  color: #aaa;
+  cursor: not-allowed;
 }
 
 /* ===== Mensagem de resposta ===== */
@@ -95,4 +104,35 @@ p {
   margin-top: 1rem;
   color: #61dafb;
   font-weight: bold;
+}
+
+.cliente-item {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  list-style: none;
+}
+
+.cliente-conteudo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cliente-botoes {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+
+.lista-clientes {
+  padding: 1rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  align-items: flex-start;
 }

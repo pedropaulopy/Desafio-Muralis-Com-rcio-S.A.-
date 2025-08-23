@@ -38,13 +38,16 @@ const CriarContato = ({ aoCriar }) => {
   };
 
   return (
-    <div>
+    <div className="form-container">
       <h2>Criar Contato para Cliente #{clienteId}</h2>
-      {mensagem && <p>{mensagem}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Tipo:</label>
-          <select value={tipo} onChange={(e) => setTipo(e.target.value)} required>
+          <select
+            value={tipo}
+            onChange={(e) => setTipo(e.target.value)}
+            required
+          >
             <option value="">Selecione</option>
             {tiposContato.map((t) => (
               <option key={t} value={t}>
@@ -75,6 +78,7 @@ const CriarContato = ({ aoCriar }) => {
 
         <button type="submit">Criar Contato</button>
       </form>
+      {mensagem && <p>{mensagem}</p>}
     </div>
   );
 };
