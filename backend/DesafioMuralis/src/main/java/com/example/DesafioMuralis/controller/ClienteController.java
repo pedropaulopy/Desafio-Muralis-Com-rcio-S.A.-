@@ -24,6 +24,8 @@ public class ClienteController {
 
     @PostMapping("/criar_cliente")
     public ResponseEntity<ClienteDTO> criarCliente(@RequestBody ClienteDTO clienteDTO) {
+        System.out.println("Recebido DTO: " + clienteDTO.getCep());
+
         Cliente cliente = clienteDTO.toEntity();
         cliente = clienteRepository.save(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ClienteDTO(cliente));
