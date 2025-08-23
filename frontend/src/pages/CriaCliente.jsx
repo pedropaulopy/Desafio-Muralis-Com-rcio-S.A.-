@@ -46,7 +46,8 @@ function CriarCliente() {
       nome,
       cpf: cpf.replace(/\D/g, ""),
       data_nascimento,
-      endereco: enderecoCompleto
+      endereco: enderecoCompleto,
+      cep
     };
 
     try {
