@@ -80,7 +80,14 @@ function AtualizaCliente() {
           <input
             type="text"
             value={cpf}
-            onChange={(e) => setCpf(e.target.value)}
+            onChange={(e) => {
+              let v = e.target.value.replace(/\D/g, "");
+              v = v.replace(/(\d{3})(\d)/, "$1.$2");
+              v = v.replace(/(\d{3})(\d)/, "$1.$2");
+              v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+              setCpf(v);
+            }}
+            maxLength={14}
             required
           />
         </div>
