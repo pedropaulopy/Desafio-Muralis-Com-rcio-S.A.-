@@ -1,24 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function CriarCliente() {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [data_nascimento, setDataNascimento] = useState("");
-  const [endereco, setEndereco] = useState(""); // desabilitado
+  const [endereco, setEndereco] = useState("");
   const [cep, setCep] = useState("");
   const [numero, setNumero] = useState("");
   const [complemento, setComplemento] = useState("");
   const [mensagem, setMensagem] = useState("");
 
+  // Busca o endereço automaticamente ao digitar 8 dígitos
+  useEffect(() => {
+    const buscarEndereco = async () => {
+      if (cep.length === 8) {
+        try {
+          const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+          const data = await response.json();
+
+          if (!data.erro) {
+            const enderecoFormatado = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+            setEndereco(enderecoFormatado);
+          } else {
+            setEndereco("");
+            setMensagem("CEP não encontrado.");
+          }
+        } catch (error) {
+          console.error("Erro ao buscar CEP:", error);
+          setMensagem("Erro ao buscar o endereço.");
+        }
+      } else {
+        setEndereco(""); // Limpa caso apague o CEP
+      }
+    };
+
+    buscarEndereco();
+  }, [cep]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // monta endereço final sem o CEP
     const enderecoCompleto = `${endereco}, ${numero}${complemento ? `, ${complemento}` : ""}`;
 
     const cliente = {
       nome,
-      cpf: cpf.replace(/\D/g, ""), // remove máscara
+      cpf: cpf.replace(/\D/g, ""),
       data_nascimento,
       endereco: enderecoCompleto
     };
@@ -78,7 +104,7 @@ function CriarCliente() {
           />
         </div>
         <div>
-          <label>Data de Nascimento (YYYY-MM-DD):</label>
+          <label>Data de Nascimento:</label>
           <input
             type="date"
             value={data_nascimento}
@@ -91,7 +117,8 @@ function CriarCliente() {
           <input
             type="text"
             value={cep}
-            onChange={(e) => setCep(e.target.value)}
+            onChange={(e) => setCep(e.target.value.replace(/\D/g, ""))}
+            maxLength={8}
             required
           />
         </div>
@@ -100,8 +127,7 @@ function CriarCliente() {
           <input
             type="text"
             value={endereco}
-            onChange={(e) => setEndereco(e.target.value)}
-            disabled // campo desabilitado
+            disabled
           />
         </div>
         <div>
