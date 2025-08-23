@@ -69,8 +69,3 @@ Este projeto em React implementa uma interface para cadastro, listagem, atualiza
 - Axios para requisições HTTP (em contatos)
 - Fetch API (em clientes)
 - Backend esperado: API REST com endpoints `http://localhost:8080`
-
----
-
-## 🗂️ Organização dos Arquivos
-
