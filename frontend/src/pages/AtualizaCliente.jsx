@@ -8,13 +8,12 @@ function AtualizaCliente() {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [data_nascimento, setDataNascimento] = useState("");
-  const [cep, setCep] = useState(""); // <- Adicionado
+  const [cep, setCep] = useState("");
   const [endereco, setEndereco] = useState("");
-  const [numero, setNumero] = useState(""); // <- Adicionado
-  const [complemento, setComplemento] = useState(""); // <- Adicionado
+  const [numero, setNumero] = useState("");
+  const [complemento, setComplemento] = useState("");
   const [mensagem, setMensagem] = useState("");
 
-  // Buscar endereço pelo CEP
   useEffect(() => {
     const buscarEndereco = async () => {
       if (cep.length === 8) {
@@ -25,6 +24,7 @@ function AtualizaCliente() {
           if (!data.erro) {
             const enderecoFormatado = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
             setEndereco(enderecoFormatado);
+            setMensagem("");
           } else {
             setEndereco("");
             setMensagem("CEP não encontrado.");
@@ -34,14 +34,13 @@ function AtualizaCliente() {
           setMensagem("Erro ao buscar o endereço.");
         }
       } else {
-        setEndereco(""); // Limpa caso apague o CEP
+        setEndereco(""); // Limpa o endereço caso o cep esteja incompleto
       }
     };
 
     buscarEndereco();
   }, [cep]);
 
-  // Carregar cliente
   useEffect(() => {
     async function fetchCliente() {
       try {
@@ -53,11 +52,17 @@ function AtualizaCliente() {
           setDataNascimento(data.data_nascimento || "");
           setEndereco(data.endereco || "");
 
-          // Separar endereço em partes
-          const partes = data.endereco.split(",");
+          // Tenta extrair CEP, número e complemento do endereço (se vier no padrão)
+          const partes = (data.endereco || "").split(",");
           if (partes.length >= 3) {
             setNumero(partes[3]?.trim() || "");
             setComplemento(partes[4]?.trim() || "");
+          }
+
+          // Você pode adaptar a lógica para extrair o CEP se ele estiver no começo ou final do endereço
+          if (data.endereco?.includes("CEP:")) {
+            const cepExtraido = data.endereco.match(/CEP: ?(\d{8})/);
+            if (cepExtraido) setCep(cepExtraido[1]);
           }
         } else {
           setMensagem("Erro ao carregar cliente.");
@@ -71,11 +76,10 @@ function AtualizaCliente() {
     fetchCliente();
   }, [id]);
 
-  // Submeter atualização
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const enderecoCompleto = `${endereco}, ${numero}${complemento ? `, ${complemento}` : ""}`;
+    const enderecoCompleto = `${endereco}, ${numero}${complemento ? `, ${complemento}` : ""}, CEP: ${cep}`;
 
     const clienteAtualizado = {
       nome,
@@ -145,8 +149,8 @@ function AtualizaCliente() {
           <input
             type="text"
             value={cep}
-            onChange={(e) => setCep(e.target.value.replace(/\D/g, ""))}
-            maxLength={8}
+            onChange={(e) => setCep(e.target.value.replace(/\D/g, "").slice(0, 8))}
+            placeholder="Somente números"
             required
           />
         </div>
