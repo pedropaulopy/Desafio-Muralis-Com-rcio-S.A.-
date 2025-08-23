@@ -12,6 +12,32 @@ function AtualizaCliente() {
   const [mensagem, setMensagem] = useState("");
 
   useEffect(() => {
+    const buscarEndereco = async () => {
+      if (cep.length === 8) {
+        try {
+          const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+          const data = await response.json();
+
+          if (!data.erro) {
+            const enderecoFormatado = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+            setEndereco(enderecoFormatado);
+          } else {
+            setEndereco("");
+            setMensagem("CEP não encontrado.");
+          }
+        } catch (error) {
+          console.error("Erro ao buscar CEP:", error);
+          setMensagem("Erro ao buscar o endereço.");
+        }
+      } else {
+        setEndereco(""); // Limpa caso apague o CEP
+      }
+    };
+
+    buscarEndereco();
+  }, [cep]);
+
+  useEffect(() => {
     async function fetchCliente() {
       try {
         const response = await fetch(`http://localhost:8080/clientes/${id}`);
