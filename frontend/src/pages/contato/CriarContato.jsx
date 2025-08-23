@@ -9,7 +9,7 @@ const CriarContato = ({ aoCriar }) => {
   const [observacao, setObservacao] = useState("");
   const [mensagem, setMensagem] = useState("");
 
-  const tiposContato = ["EMAIL", "TELEFONE", "CELULAR", "WHATSAPP"];
+  const tiposContato = ["EMAIL", "TELEFONE"];
 
   const handleSubmit = async (e) => {
     e.preventDefault();

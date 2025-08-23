@@ -8,9 +8,40 @@ function AtualizaCliente() {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [data_nascimento, setDataNascimento] = useState("");
+  const [cep, setCep] = useState(""); // <- Adicionado
   const [endereco, setEndereco] = useState("");
+  const [numero, setNumero] = useState(""); // <- Adicionado
+  const [complemento, setComplemento] = useState(""); // <- Adicionado
   const [mensagem, setMensagem] = useState("");
 
+  // Buscar endereço pelo CEP
+  useEffect(() => {
+    const buscarEndereco = async () => {
+      if (cep.length === 8) {
+        try {
+          const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+          const data = await response.json();
+
+          if (!data.erro) {
+            const enderecoFormatado = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+            setEndereco(enderecoFormatado);
+          } else {
+            setEndereco("");
+            setMensagem("CEP não encontrado.");
+          }
+        } catch (error) {
+          console.error("Erro ao buscar CEP:", error);
+          setMensagem("Erro ao buscar o endereço.");
+        }
+      } else {
+        setEndereco(""); // Limpa caso apague o CEP
+      }
+    };
+
+    buscarEndereco();
+  }, [cep]);
+
+  // Carregar cliente
   useEffect(() => {
     async function fetchCliente() {
       try {
@@ -21,6 +52,13 @@ function AtualizaCliente() {
           setCpf(data.cpf || "");
           setDataNascimento(data.data_nascimento || "");
           setEndereco(data.endereco || "");
+
+          // Separar endereço em partes
+          const partes = data.endereco.split(",");
+          if (partes.length >= 3) {
+            setNumero(partes[3]?.trim() || "");
+            setComplemento(partes[4]?.trim() || "");
+          }
         } else {
           setMensagem("Erro ao carregar cliente.");
         }
@@ -33,14 +71,17 @@ function AtualizaCliente() {
     fetchCliente();
   }, [id]);
 
+  // Submeter atualização
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const enderecoCompleto = `${endereco}, ${numero}${complemento ? `, ${complemento}` : ""}`;
+
     const clienteAtualizado = {
       nome,
-      cpf,
+      cpf: cpf.replace(/\D/g, ""),
       data_nascimento,
-      endereco,
+      endereco: enderecoCompleto,
     };
 
     try {
@@ -80,7 +121,14 @@ function AtualizaCliente() {
           <input
             type="text"
             value={cpf}
-            onChange={(e) => setCpf(e.target.value)}
+            onChange={(e) => {
+              let v = e.target.value.replace(/\D/g, "");
+              v = v.replace(/(\d{3})(\d)/, "$1.$2");
+              v = v.replace(/(\d{3})(\d)/, "$1.$2");
+              v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+              setCpf(v);
+            }}
+            maxLength={14}
             required
           />
         </div>
@@ -93,11 +141,38 @@ function AtualizaCliente() {
           />
         </div>
         <div>
+          <label>CEP:</label>
+          <input
+            type="text"
+            value={cep}
+            onChange={(e) => setCep(e.target.value.replace(/\D/g, ""))}
+            maxLength={8}
+            required
+          />
+        </div>
+        <div>
           <label>Endereço:</label>
           <input
             type="text"
             value={endereco}
-            onChange={(e) => setEndereco(e.target.value)}
+            disabled
+          />
+        </div>
+        <div>
+          <label>Número:</label>
+          <input
+            type="text"
+            value={numero}
+            onChange={(e) => setNumero(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Complemento:</label>
+          <input
+            type="text"
+            value={complemento}
+            onChange={(e) => setComplemento(e.target.value)}
           />
         </div>
         <button type="submit">Salvar</button>
