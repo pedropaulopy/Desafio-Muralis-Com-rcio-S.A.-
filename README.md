@@ -7,34 +7,88 @@ Este projeto implementa um sistema completo de gerenciamento de **clientes** e s
 
 ---
 
+## 🚀 Como Executar Localmente
+
+### ✅ Pré-requisitos
+
+- [Node.js](https://nodejs.org/) (versão 18+ recomendada)
+- [Java 17+](https://adoptium.net/)
+- [Docker](https://www.docker.com/) + [Docker Compose](https://docs.docker.com/compose/)
+- Git (opcional)
+
+---
+
+### 📦 1. Clone o Projeto
+
+```bash
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd seu-repositorio
+```
+
+> Ou baixe o `.zip`, extraia e navegue até a pasta.
+
+---
+
+### 🐳 2. Suba o banco de dados PostgreSQL com Docker
+
+```bash
+docker-compose up -d
+```
+
+Isso criará um container com:
+
+- Banco: `contatosdb`
+- Usuário: `appuser`
+- Senha: `apppass`
+- Porta: `5432`
+
+---
+
+### ☕ 3. Inicie o Backend (Spring Boot)
+
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+
+> Se estiver em Windows: `mvnw.cmd spring-boot:run`
+
+---
+
+### ⚛️ 4. Inicie o Frontend (React)
+
+```bash
+cd ../frontend
+npm install
+npm start
+```
+
+---
+
+### 🔍 Teste nos Navegadores
+
+- **Frontend**: http://localhost:3000  
+- **API Swagger (Documentação)**: http://localhost:8080/docs-swagger  
+
+---
+
 ## ⚛️ Frontend (React)
 
 ### 👤 Clientes
 
 - **Criar Cliente** (`CriaCliente.jsx`)  
-  Formulário para cadastrar novo cliente com:
-  - Nome
-  - CPF
-  - Data de nascimento
-  - Endereço  
   ➕ Envia um `POST` para `/clientes/criar_cliente`
 
 - **Listar Clientes** (`ListaClientes.jsx`)  
-  Exibe todos os clientes cadastrados com botões para:
-  - Editar cliente
-  - Deletar cliente
-  - Listar contatos do cliente  
   🔄 `GET /clientes`  
   ❌ `DELETE /clientes/deletar_cliente/{id}`  
   🔁 Redireciona para contatos
 
 - **Atualizar Cliente** (`AtualizaCliente.jsx`)  
-  Permite editar dados de um cliente existente.  
   🔍 `GET /clientes/{id}`  
   💾 `PUT /clientes/editar_cliente/{id}`
 
 - **Deletar Cliente (Form)** (`DeletaCliente.jsx`)  
-  Permite inserir manualmente o ID de um cliente para exclusão.  
   ❌ `DELETE /clientes/deletar_cliente/{id}`
 
 ---
@@ -42,25 +96,17 @@ Este projeto implementa um sistema completo de gerenciamento de **clientes** e s
 ### ☎️ Contatos
 
 - **Listar Contatos do Cliente** (`ListaContatosCliente.jsx`)  
-  Exibe todos os contatos de um cliente.  
   🔍 `GET /contatos/listar_contatos/{clienteId}`  
   ✏️ Editar ou deletar contato  
   ➕ Criar novo contato
 
 - **Criar Contato** (`CriarContato.jsx`)  
-  Formulário para cadastrar novo contato associado a um cliente:
-  - Tipo (`EMAIL`, `TELEFONE`)
-  - Valor
-  - Observação (opcional)  
   ➕ `POST /contatos/criar_contato/{clienteId}`
 
 - **Atualizar Contato** (`AtualizaContato.jsx`)  
-  Permite editar os dados de um contato já existente.  
-  🔍 `GET /contatos/listar_contatos/{clienteId}`  
   💾 `PUT /contatos/atualizar_contatos/{clienteId}/{contatoId}`
 
 - **Deletar Contato (Confirmado)** (`DeletarContato.jsx`)  
-  Exibe confirmação para deletar contato de um cliente específico  
   ❌ `DELETE /contatos/deletar_contato/{clienteId}/{contatoId}`
 
 ---
@@ -70,34 +116,64 @@ Este projeto implementa um sistema completo de gerenciamento de **clientes** e s
 ### Estrutura
 
 - **Controllers**
-  - `ClienteController.java` → CRUD de clientes (criar, editar, deletar, listar e buscar):contentReference[oaicite:0]{index=0}  
-  - `ContatoController.java` → CRUD de contatos vinculados a clientes:contentReference[oaicite:1]{index=1}
+  - `ClienteController.java`
+  - `ContatoController.java`
 
 - **Models**
-  - `Cliente.java` → Entidade cliente, com validações (`nome`, `cpf`, `data_nascimento`, `endereco`):contentReference[oaicite:2]{index=2}  
-  - `Contato.java` → Entidade contato, associada a um cliente, com tipo, valor e observação:contentReference[oaicite:3]{index=3}  
-  - `TipoContato.java` → Enum (`EMAIL`, `TELEFONE`):contentReference[oaicite:4]{index=4}
+  - `Cliente.java`
+  - `Contato.java`
+  - `TipoContato.java`
 
 - **Repositories**
-  - `ClienteRepository.java` → Consultas por nome, CPF ou ambos:contentReference[oaicite:5]{index=5}  
-  - `ContatoRepository.java` → Busca contatos por cliente:contentReference[oaicite:6]{index=6}
+  - `ClienteRepository.java`
+  - `ContatoRepository.java`
 
 - **Application**
-  - `DesafioMuralisApplication.java` → Classe principal para inicialização do Spring Boot:contentReference[oaicite:7]{index=7}
+  - `DesafioMuralisApplication.java`
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 
 ### Frontend
 - React (hooks: `useState`, `useEffect`, `useNavigate`, `useParams`)
 - React Router DOM
-- Axios (requisições HTTP em contatos)
-- Fetch API (requisições HTTP em clientes)
+- Axios
+- Fetch API
 
 ### Backend
-- Java 17+  
-- Spring Boot  
-- Spring Data JPA  
-- Hibernate Validator  
-- Banco de dados relacional (configurável via Spring Boot)  
+- Java 17+
+- Spring Boot
+- Spring Data JPA
+- Hibernate Validator
+- PostgreSQL (via Docker)
+
+---
+
+## 📂 docker-compose.yml
+
+Já incluído na raiz do projeto:
+
+```yaml
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    container_name: contatosdb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: contatosdb
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: apppass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
+```
+
+---
+
+## 👨‍💻 Autor
+
+Projeto desenvolvido como parte do **Desafio Muralis** 🚀
