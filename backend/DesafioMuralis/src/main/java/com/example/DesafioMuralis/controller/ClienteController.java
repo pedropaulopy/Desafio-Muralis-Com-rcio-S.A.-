@@ -27,6 +27,8 @@ public class ClienteController {
         System.out.println("Recebido DTO: " + clienteDTO.getCep());
 
         Cliente cliente = clienteDTO.toEntity();
+        System.out.println("Salvando cliente: " + cliente.getCep());
+
         cliente = clienteRepository.save(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ClienteDTO(cliente));
     }
