@@ -5,6 +5,11 @@ function ListaClientes() {
   const [clientes, setClientes] = useState([]);
   const navigate = useNavigate();
 
+  const formatarCPF = (cpf) => {
+    if (!cpf || cpf.length !== 11) return cpf;
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  };
+
   const fetchClientes = async () => {
     try {
       const response = await fetch("http://localhost:8080/clientes");
@@ -53,24 +58,22 @@ function ListaClientes() {
       {clientes.length === 0 ? (
         <p>Nenhum cliente cadastrado.</p>
       ) : (
-    <ul className="lista-clientes">
-      {clientes.map((cliente) => (
-        <li key={cliente.id} className="cliente-item">
-          <div className="cliente-conteudo">
-            <span>
-              <strong>{cliente.nome}</strong> — CPF: {cliente.cpf}
-            </span>
-            <div className="cliente-botoes">
-              <button onClick={() => handleEditar(cliente.id)}>EDITAR</button>
-              <button onClick={() => handleDeletar(cliente.id)}>DELETAR</button>
-              <button onClick={() => handleListarContatos(cliente.id)}>LISTAR CONTATOS</button>
-            </div>
-          </div>
-        </li>
-      ))}
-    </ul>
-
-
+        <ul className="lista-clientes">
+          {clientes.map((cliente) => (
+            <li key={cliente.id} className="cliente-item">
+              <div className="cliente-conteudo">
+                <span>
+                  <strong>{cliente.nome}</strong> — CPF: {formatarCPF(cliente.cpf)}
+                </span>
+                <div className="cliente-botoes">
+                  <button onClick={() => handleEditar(cliente.id)}>EDITAR</button>
+                  <button onClick={() => handleDeletar(cliente.id)}>DELETAR</button>
+                  <button onClick={() => handleListarContatos(cliente.id)}>LISTAR CONTATOS</button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
