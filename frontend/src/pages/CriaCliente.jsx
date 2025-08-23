@@ -49,7 +49,7 @@ function CriarCliente() {
       endereco: enderecoCompleto,
       cep
     };
-
+    console.log("Cliente a ser enviado:", cliente);
     try {
       const response = await fetch("http://localhost:8080/clientes/criar_cliente", {
         method: "POST",
