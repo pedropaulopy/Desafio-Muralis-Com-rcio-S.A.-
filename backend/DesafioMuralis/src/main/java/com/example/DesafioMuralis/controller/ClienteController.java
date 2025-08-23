@@ -44,6 +44,8 @@ public class ClienteController {
         cliente.setCpf(clienteAtualizado.getCpf());
         cliente.setData_nascimento(clienteAtualizado.getData_nascimento());
         cliente.setEndereco(clienteAtualizado.getEndereco());
+        cliente.setCep(clienteAtualizado.getCep());
+
 
         return clienteRepository.save(cliente);
     }
