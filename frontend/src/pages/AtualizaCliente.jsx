@@ -104,7 +104,24 @@ function AtualizaCliente() {
           <input
             type="text"
             value={endereco}
-            onChange={(e) => setEndereco(e.target.value)}
+            disabled
+          />
+        </div>
+        <div>
+          <label>Número:</label>
+          <input
+            type="text"
+            value={numero}
+            onChange={(e) => setNumero(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Complemento:</label>
+          <input
+            type="text"
+            value={complemento}
+            onChange={(e) => setComplemento(e.target.value)}
           />
         </div>
         <button type="submit">Salvar</button>
