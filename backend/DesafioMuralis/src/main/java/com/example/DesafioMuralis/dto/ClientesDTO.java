@@ -1,6 +1,5 @@
-package com.seupacote.dto;
-
-import com.seupacote.modelo.Cliente;
+package com.example.DesafioMuralis.dto;
+import com.example.DesafioMuralis.model.Cliente;
 
 public class ClienteDTO {
     private Long id;
