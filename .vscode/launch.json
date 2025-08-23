@@ -4,6 +4,13 @@
             "type": "java",
             "name": "DesafioMuralisApplication",
             "request": "launch",
+            "mainClass": "com.example.DesafioMuralis.DesafioMuralisApplication",
+            "projectName": ""
+        },
+        {
+            "type": "java",
+            "name": "DesafioMuralisApplication",
+            "request": "launch",
             "mainClass": "DesafioMuralisApplication",
             "projectName": "DesafioMuralis"
         },
