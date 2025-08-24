@@ -26,8 +26,6 @@ public class ClienteController {
     // Endpoint POST: cria um novo cliente a partir de um DTO
     @PostMapping("/criar_cliente")
     public ResponseEntity<ClienteDTO> criarCliente(@RequestBody ClienteDTO clienteDTO) {
-        // Log simples para auxiliar depuração local
-        System.out.println("Recebido DTO: " + clienteDTO.getCep());
 
         // Converte DTO em entidade e persiste
         Cliente cliente = clienteDTO.toEntity();
