@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+// Componente de UI: formulário para atualizar os dados de um cliente existente
 function AtualizaCliente() {
+  // Pega o id da rota e uma função para navegação
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // Estados locais para os campos do formulário e mensagens
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [data_nascimento, setDataNascimento] = useState("");
@@ -14,60 +17,70 @@ function AtualizaCliente() {
   const [complemento, setComplemento] = useState("");
   const [mensagem, setMensagem] = useState("");
 
+  // Efeito para buscar endereço automaticamente ao preencher CEP (quando tiver 8 dígitos)
   useEffect(() => {
     const buscarEndereco = async () => {
+      // Se CEP completo, solicita dados ao serviço viacep
       if (cep.length === 8) {
         try {
           const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
           const data = await response.json();
 
           if (!data.erro) {
+            // Formata e salva o endereço retornado
             const enderecoFormatado = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
             setEndereco(enderecoFormatado);
             setMensagem("");
           } else {
+            // CEP não encontrado
             setEndereco("");
             setMensagem("CEP não encontrado.");
           }
         } catch (error) {
+          // Erro na requisição ao serviço de CEP
           console.error("Erro ao buscar CEP:", error);
           setMensagem("Erro ao buscar o endereço.");
         }
       } else {
-        setEndereco(""); // Limpa o endereço caso o cep esteja incompleto
+        // Limpa o endereço enquanto o CEP estiver incompleto
+        setEndereco("");
       }
     };
 
     buscarEndereco();
   }, [cep]);
 
+  // Efeito para buscar dados do cliente ao montar o componente (usa o id da rota)
   useEffect(() => {
     async function fetchCliente() {
       try {
         const response = await fetch(`http://localhost:8080/clientes/${id}`);
         if (response.ok) {
           const data = await response.json();
+          // Preenche campos com dados retornados, usando fallback para strings vazias
           setNome(data.nome || "");
           setCpf(data.cpf || "");
           setDataNascimento(data.data_nascimento || "");
           setEndereco(data.endereco || "");
 
-          // Tenta extrair CEP, número e complemento do endereço (se vier no padrão)
+          // Tenta extrair número e complemento a partir do campo 'endereco' (se padrão conhecido)
           const partes = (data.endereco || "").split(",");
           if (partes.length >= 3) {
             setNumero(partes[3]?.trim() || "");
             setComplemento(partes[4]?.trim() || "");
           }
 
-          // Você pode adaptar a lógica para extrair o CEP se ele estiver no começo ou final do endereço
+          // Tenta extrair CEP se estiver no formato "CEP: 00000000"
           if (data.endereco?.includes("CEP:")) {
             const cepExtraido = data.endereco.match(/CEP: ?(\d{8})/);
             if (cepExtraido) setCep(cepExtraido[1]);
           }
         } else {
+          // Resposta não ok do backend
           setMensagem("Erro ao carregar cliente.");
         }
       } catch (error) {
+        // Erro de conexão com servidor
         console.error("Erro ao buscar cliente:", error);
         setMensagem("Erro de conexão com o servidor.");
       }
@@ -76,14 +89,16 @@ function AtualizaCliente() {
     fetchCliente();
   }, [id]);
 
+  // Handler de envio do formulário que monta o objeto e faz PUT no backend
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Monta o endereço completo com número, complemento e CEP
     const enderecoCompleto = `${endereco}, ${numero}${complemento ? `, ${complemento}` : ""}, CEP: ${cep}`;
 
     const clienteAtualizado = {
       nome,
-      cpf: cpf.replace(/\D/g, ""),
+      cpf: cpf.replace(/\D/g, ""), // Remove formatação para enviar somente números
       data_nascimento,
       endereco: enderecoCompleto,
       cep,
@@ -97,17 +112,21 @@ function AtualizaCliente() {
       });
 
       if (response.ok) {
+        // Sucesso: informa usuário e redireciona para lista
         alert("Cliente atualizado com sucesso!");
         navigate("/clientes");
       } else {
+        // Erro retornado pelo backend
         setMensagem("Erro ao atualizar cliente.");
       }
     } catch (error) {
+      // Erro de conexão ao atualizar
       console.error("Erro ao atualizar cliente:", error);
       setMensagem("Erro ao conectar com o servidor.");
     }
   };
 
+  // Render do formulário com campos controlados
   return (
     <div className="form-container">
       <h2>Atualizar Cliente</h2>
@@ -127,6 +146,7 @@ function AtualizaCliente() {
             type="text"
             value={cpf}
             onChange={(e) => {
+              // Formata CPF enquanto o usuário digita (xxx.xxx.xxx-xx)
               let v = e.target.value.replace(/\D/g, "");
               v = v.replace(/(\d{3})(\d)/, "$1.$2");
               v = v.replace(/(\d{3})(\d)/, "$1.$2");
@@ -181,9 +201,11 @@ function AtualizaCliente() {
         </div>
         <button type="submit">Salvar</button>
       </form>
+      {/* Exibe mensagens de erro ou status para o usuário */}
       {mensagem && <p>{mensagem}</p>}
     </div>
   );
 }
 
+/* Comentário final explicando exportação do componente */
 export default AtualizaCliente;
